@@ -169,7 +169,6 @@ private:
     ApplePS2MouseDevice * _device;
     bool                _interruptHandlerInstalled;
     bool                _powerControlHandlerInstalled;
-    bool                _messageHandlerInstalled;
     RingBuffer<UInt8, kPacketLength*32> _ringBuffer;
     UInt32              _packetByteCount;
     UInt8               _lastdata;
@@ -277,8 +276,18 @@ private:
     bool _reportsv;
     int clickpadtype;   //0=not, 1=1button, 2=2button, 3=reserved
     UInt32 _clickbuttons;  //clickbuttons to merge into buttons
-    int mousecount;
     bool usb_mouse_stops_trackpad;
+    
+    int _processusbmouse;
+    int _processbluetoothmouse;
+
+    OSSet* attachedHIDPointerDevices;
+    
+    IONotifier* usb_hid_publish_notify;     // Notification when an USB mouse HID device is connected
+    IONotifier* usb_hid_terminate_notify; // Notification when an USB mouse HID device is disconnected
+    
+    IONotifier* bluetooth_hid_publish_notify; // Notification when a bluetooth HID device is connected
+    IONotifier* bluetooth_hid_terminate_notify; // Notification when a bluetooth HID device is disconnected
     
     int _modifierdown; // state of left+right control keys
     int scrollzoommask;
@@ -387,8 +396,6 @@ private:
     virtual void packetReady();
     virtual void   setDevicePowerState(UInt32 whatToDo);
     
-    virtual void   receiveMessage(int message, void* data);
-    
     void updateTouchpadLED();
     bool setTouchpadLED(UInt8 touchLED);
     bool setTouchpadModeByte(); // set based on state
@@ -412,6 +419,11 @@ private:
     void setParamPropertiesGated(OSDictionary* dict);
     void injectVersionDependentProperties(OSDictionary* dict);
 
+    void registerHIDPointerNotifications();
+    void unregisterHIDPointerNotifications();
+    
+    void notificationHIDAttachedHandlerGated(IOService * newService, IONotifier * notifier);
+    bool notificationHIDAttachedHandler(void * refCon, IOService * newService, IONotifier * notifier);
 protected:
 	virtual IOItemCount buttonCount();
 	virtual IOFixed     resolution();
@@ -436,6 +448,8 @@ public:
 
 	virtual IOReturn setParamProperties(OSDictionary * dict);
 	virtual IOReturn setProperties(OSObject *props);
+    
+    virtual IOReturn message(UInt32 type, IOService* provider, void* argument);
 };
 
 #endif /* _APPLEPS2SYNAPTICSTOUCHPAD_H */

@@ -85,14 +85,35 @@ Note: often times you will see either of the two problems mentioned above right 
 
 ### Change Log:
 
-2018-05-6 v1.8.34
+2018-10-08 v1.9.2
+
+- Tapping stability: ignore moves while waiting for tap gestures (eg. pointer will not move while making a tap or double tap gesture)
+
+- Increase TapThreasholdX/Y, DoubleTapThresholdX/Y (from 50/100 to 75/150)
+
+
+2018-09-28 v1.9.1
+
+- Fix panic caused by notifications that sometimes happen during HID registration (reported issue #166 and elsewhere)
+
+
+2018-09-22 v1.9.0
+
+- VoodooPS2Daemon is deprecated, replaced with kernel level functionality (courtesy the-darkvoid)
+
+- "ignore  built-in trackpad" now works with USB mice as well as bluetooth mice (courtesy the-darkvoid)
+
+- use system notifications for keyboard integration with VoodooI2C project (courtesy the-darkvoid)
+
+
+2018-05-06 v1.8.34
 
 - fix bug with DisableDevice when used with the Synaptics profile
 
 
 2018-05-05 v1.8.33 (redacted)
 
-- change BogusDeleteThreshX and BogusDeltaThreshY for Thinkpad_Trackpad profile (Lenovo T420)
+- change BogusDeleteThreshX and BogusDeltaThreshY for Thinkpad_TrackPad profile (Lenovo T420)
 
 - change default delay for findMouseDevice to 100ms
 
